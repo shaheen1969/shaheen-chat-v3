@@ -1,54 +1,53 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. تحديد العناصر من الواجهة التي ظهرت في الصورة
-    const sendBtn = document.querySelector('.send-btn') || document.querySelector('button');
-    const inputField = document.querySelector('input[type="text"]');
-    const chatContent = document.querySelector('.main-content');
+async function handleSend() {
+    const input = document.getElementById('user-query'); // أو معرف الإدخال لديك
+    const display = document.getElementById('chat-display'); // منطقة عرض الرسائل
+    const query = input.value.trim();
 
-    async function handleSend() {
-        const text = inputField.value.trim();
-        if (!text) return;
+    if (!query) return; // منع الإرسال الفارغ
 
-        // إخفاء رسالة الترحيب
-        const welcome = document.querySelector('.welcome-section');
-        if (welcome) welcome.style.display = 'none';
+    // 1. عرض رسالة المستخدم أولاً
+    display.innerHTML += `<div class="message user-msg">${query}</div>`;
+    input.value = ""; // تنظيف الحقل فوراً
+    display.scrollTop = display.scrollHeight;
 
-        // 2. إضافة رسالة المستخدم
-        const uDiv = document.createElement('div');
-        uDiv.style.cssText = "color: white; background: #2d2d2d; padding: 12px; border-radius: 10px; margin: 10px 0; align-self: flex-end; margin-left: auto; max-width: 80%;";
-        uDiv.textContent = text;
-        chatContent.appendChild(uDiv);
-        inputField.value = "";
+    // 2. إنشاء loadingId فريد وضمان وجوده في الـ DOM
+    const loadingId = "bot-response-" + Date.now();
+    
+    // إنشاء عنصر الرسالة كـ Object لضمان التحكم به قبل الإضافة
+    const botMessageElement = document.createElement('div');
+    botMessageElement.className = 'message bot-msg';
+    botMessageElement.id = loadingId; // ربط المعرف هنا هو السر
+    botMessageElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحليل...';
+    
+    display.appendChild(botMessageElement);
+    display.scrollTop = display.scrollHeight;
 
-        // 3. إضافة مكان رد "شاهين"
-        const bDiv = document.createElement('div');
-        bDiv.style.cssText = "color: #00ff88; background: #1a1a1a; padding: 12px; border-radius: 10px; margin: 10px 0; border-left: 3px solid #00ff88; max-width: 80%;";
-        chatContent.appendChild(bDiv);
+    try {
+        // 3. الاتصال بالمحرك المحدث في Streamlit
+        const response = await fetch('https://shaheen-backend-a5huxtb3zxkpvacbggancq.streamlit.app/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: query })
+        });
 
-        try {
-            const res = await fetch('https://shaheen-backend-o6p47v47oa-uc.a.run.app/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
-            });
-            const data = await res.json();
-            
-            // تأثير الكتابة التدريجي
-            let i = 0;
-            function type() {
-                if (i < data.reply.length) {
-                    bDiv.innerHTML += data.reply.charAt(i);
-                    i++;
-                    setTimeout(type, 30);
-                    chatContent.scrollTop = chatContent.scrollHeight;
-                }
-            }
-            type();
-        } catch (e) {
-            bDiv.textContent = "خطأ في الاتصال بالسيرفر.";
+        if (!response.ok) throw new Error('سيرفر Streamlit غير مستجيب');
+
+        const data = await response.json();
+        
+        // 4. تحديث نفس العنصر بالرد الحقيقي
+        const targetElement = document.getElementById(loadingId);
+        if (targetElement) {
+            targetElement.innerHTML = `<b>شاهين شات:</b><br>${data.reply}`;
         }
-    }
 
-    // ربط الأحداث
-    sendBtn.onclick = handleSend;
-    inputField.onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
-});
+    } catch (e) {
+        // 5. معالجة الأخطاء برسالة بسيطة دون تفاصيل تقنية مزعجة
+        const errorElement = document.getElementById(loadingId);
+        if (errorElement) {
+            errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> نعتذر عن هذا التأخير اللحظي، يرجى المحاولة مرة أخرى.';
+        }
+        console.error("Diagnostic Log:", e);
+    }
+    
+    display.scrollTop = display.scrollHeight;
+}
