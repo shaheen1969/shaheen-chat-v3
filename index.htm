@@ -6,40 +6,37 @@
     <title>شاهين شات | ShaheenChat</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* استعادة التصميم الأسود والأخضر الفخم */
         * { box-sizing: border-box; }
         body { background-color: #0b0b0b; color: white; font-family: 'Cairo', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .container { display: flex; width: 100%; height: 100%; }
         
-        /* القائمة الجانبية */
         .sidebar { width: 280px; background: #111; padding: 30px 20px; border-left: 1px solid #222; display: flex; flex-direction: column; align-items: center; }
         #main-logo { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #00ff88; margin-bottom: 20px; object-fit: cover; }
-        .sidebar h2 { color: #00ff88; font-size: 1.6rem; margin: 0 0 30px 0; }
+        .sidebar h2 { color: #00ff88; font-size: 1.6rem; margin: 0; }
         
-        /* منطقة المحادثة */
         .main-content { flex: 1; display: flex; flex-direction: column; background: #0b0b0b; position: relative; }
         #chat-box { flex: 1; overflow-y: auto; padding: 40px; display: flex; flex-direction: column; }
         
         .welcome-section { text-align: center; margin-top: 10vh; }
         .welcome-section h1 { color: #00ff88; font-size: 2.8rem; }
 
-        /* منطقة الإدخال */
         .input-area { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; padding: 0 40px; }
         .input-container { width: 100%; max-width: 900px; display: flex; background: #1a1a1a; border-radius: 16px; padding: 10px 20px; border: 1px solid #333; align-items: center; }
         #user-input { flex: 1; background: transparent; border: none; color: white; padding: 10px; outline: none; font-size: 1.1rem; font-family: 'Cairo'; }
         
         .send-btn { background: #00ff88; border: none; border-radius: 12px; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* الرسائل */
         .message { padding: 15px 20px; border-radius: 18px; margin: 12px 0; max-width: 75%; line-height: 1.8; }
-        .user-message { background: #00ff88; color: #000; align-self: flex-end; margin-left: auto; }
+        .user-message { background: #00ff88; color: #000; align-self: flex-end; margin-left: auto; font-weight: bold; }
         .bot-message { background: #1e1e1e; color: #e0e0e0; align-self: flex-start; border-right: 4px solid #00ff88; }
     </style>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <!-- الشعار برابط مباشر جديد ومستقر -->
-            <img src="https://i.postimg.cc/mD3fL8mK/shaheen-logo.png" alt="Shaheen Logo" id="main-logo">
+            <!-- رابط شعار جديد ومباشر ومستقر جداً -->
+            <img src="https://raw.githubusercontent.com/shaheen1969/shaheen-chat-v3/main/logo.png" onerror="this.src='https://i.postimg.cc/mD3fL8mK/shaheen-logo.png'" alt="Shaheen Logo" id="main-logo">
             <h2>شاهين شات</h2>
         </aside>
 
@@ -47,7 +44,7 @@
             <div id="chat-box">
                 <div id="welcome-msg" class="welcome-section">
                     <h1>كيف يمكنني مساعدتك اليوم؟</h1>
-                    <p>إصدار 2026 المطوّر - بوابة الابتكار العالمي</p>
+                    <p>إصدار 2026 المطوّر | بوابة الابتكار العالمي</p>
                 </div>
             </div>
 
@@ -78,17 +75,17 @@
 
             const botDiv = document.createElement('div');
             botDiv.className = 'message bot-message';
-            botDiv.innerHTML = "جاري الاتصال بالسيرفر...";
+            botDiv.innerHTML = "جاري التفكير...";
             chatBox.appendChild(botDiv);
 
             try {
-                // محاولة الاتصال مع تجاهل ذاكرة التخزين المؤقت
                 const res = await fetch('https://shaheen-backend-o6p47v47oa-uc.a.run.app/chat', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({message: msg}),
-                    cache: 'no-cache'
+                    body: JSON.stringify({message: msg})
                 });
+                
+                if (!res.ok) throw new Error();
                 
                 const data = await res.json();
                 botDiv.innerHTML = ""; 
@@ -104,7 +101,7 @@
                 }
                 type();
             } catch(e) {
-                botDiv.innerHTML = "تعذر الرد حالياً، يرجى التأكد من تشغيل السيرفر الخاص بك (Backend).";
+                botDiv.innerHTML = "عذراً سيد محمد، يبدو أن السيرفر متوقف حالياً. يرجى التأكد من تشغيل رابط الـ Backend الخاص بك.";
             }
         }
         document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') send(); });
