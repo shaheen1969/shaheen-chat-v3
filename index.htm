@@ -6,13 +6,14 @@
     <title>شاهين شات | ShaheenChat</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* استعادة التصميم الأسود والأخضر الفخم */
         * { box-sizing: border-box; }
         body { background-color: #0b0b0b; color: white; font-family: 'Cairo', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .container { display: flex; width: 100%; height: 100%; }
         
         .sidebar { width: 280px; background: #111; padding: 30px 20px; border-left: 1px solid #222; display: flex; flex-direction: column; align-items: center; }
-        #main-logo { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #00ff88; margin-bottom: 20px; object-fit: cover; }
+        /* تصميم شعار بديل في حال فشل الرابط */
+        .logo-box { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #00ff88; display: flex; align-items: center; justify-content: center; background: #1a1a1a; overflow: hidden; margin-bottom: 20px; }
+        #main-logo { width: 100%; height: 100%; object-fit: cover; }
         .sidebar h2 { color: #00ff88; font-size: 1.6rem; margin: 0; }
         
         .main-content { flex: 1; display: flex; flex-direction: column; background: #0b0b0b; position: relative; }
@@ -25,7 +26,8 @@
         .input-container { width: 100%; max-width: 900px; display: flex; background: #1a1a1a; border-radius: 16px; padding: 10px 20px; border: 1px solid #333; align-items: center; }
         #user-input { flex: 1; background: transparent; border: none; color: white; padding: 10px; outline: none; font-size: 1.1rem; font-family: 'Cairo'; }
         
-        .send-btn { background: #00ff88; border: none; border-radius: 12px; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .send-btn { background: #00ff88; border: none; border-radius: 12px; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .send-btn:hover { transform: scale(1.1); }
 
         .message { padding: 15px 20px; border-radius: 18px; margin: 12px 0; max-width: 75%; line-height: 1.8; }
         .user-message { background: #00ff88; color: #000; align-self: flex-end; margin-left: auto; font-weight: bold; }
@@ -35,8 +37,9 @@
 <body>
     <div class="container">
         <aside class="sidebar">
-            <!-- رابط شعار جديد ومباشر ومستقر جداً -->
-            <img src="https://raw.githubusercontent.com/shaheen1969/shaheen-chat-v3/main/logo.png" onerror="this.src='https://i.postimg.cc/mD3fL8mK/shaheen-logo.png'" alt="Shaheen Logo" id="main-logo">
+            <div class="logo-box">
+                <img src="https://i.postimg.cc/mD3fL8mK/shaheen-logo.png" alt="S" id="main-logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:#00ff88; font-size:40px; font-weight:bold;\'>S</span>'">
+            </div>
             <h2>شاهين شات</h2>
         </aside>
 
@@ -52,6 +55,7 @@
                 <div class="input-container">
                     <input type="text" id="user-input" placeholder="اكتب رسالتك هنا يا سيد محمد..." autocomplete="off">
                     <button class="send-btn" onclick="send()">
+                        <!-- أيقونة برمجية داخلية لضمان عدم الاختفاء -->
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
                     </button>
                 </div>
@@ -75,10 +79,11 @@
 
             const botDiv = document.createElement('div');
             botDiv.className = 'message bot-message';
-            botDiv.innerHTML = "جاري التفكير...";
+            botDiv.innerHTML = "جاري الاتصال بالسيرفر...";
             chatBox.appendChild(botDiv);
 
             try {
+                // محاولة الاتصال بالسيرفر
                 const res = await fetch('https://shaheen-backend-o6p47v47oa-uc.a.run.app/chat', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -101,7 +106,7 @@
                 }
                 type();
             } catch(e) {
-                botDiv.innerHTML = "عذراً سيد محمد، يبدو أن السيرفر متوقف حالياً. يرجى التأكد من تشغيل رابط الـ Backend الخاص بك.";
+                botDiv.innerHTML = "<b>تعذر الرد حالياً:</b> السيرفر (Backend) لا يستجيب. يرجى التأكد من تشغيله في لوحة التحكم الخاصة بك.";
             }
         }
         document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') send(); });
