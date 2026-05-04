@@ -1,24 +1,27 @@
+// دالة إرسال الرسالة
 async function sendMessage() {
-    const userInput = document.querySelector('input[type="text"]') || document.getElementById('user-input');
+    // محاولة إيجاد حقل الكتابة بأكثر من طريقة
+    const userInput = document.querySelector('input[type="text"]') || document.querySelector('.input-field') || document.getElementById('user-input');
+    // محاولة إيجاد حاوية المحادثة
     const chatContainer = document.querySelector('.main-content') || document.getElementById('chat-container');
+    
     const message = userInput.value.trim();
-
     if (message === "") return;
 
-    // إخفاء رسالة الترحيب عند بدء المحادثة
-    const welcomeSection = document.querySelector('.welcome-section');
+    // إخفاء رسالة الترحيب "كيف يمكنني مساعدتك" عند أول رسالة
+    const welcomeSection = document.querySelector('.welcome-section') || document.querySelector('h1')?.parentElement;
     if (welcomeSection) welcomeSection.style.display = 'none';
 
-    // 1. عرض رسالة المستخدم
+    // 1. إضافة رسالة المستخدم للواجهة بتنسيق فوري
     const userDiv = document.createElement('div');
-    userDiv.style.cssText = "color: white; background: #2d2d2d; padding: 15px; border-radius: 10px; margin: 10px 0; align-self: flex-end; max-width: 80%;";
+    userDiv.style.cssText = "color: white; background: #2d2d2d; padding: 12px; border-radius: 10px; margin: 10px 0; align-self: flex-end; width: fit-content; max-width: 80%; margin-left: auto;";
     userDiv.textContent = message;
     chatContainer.appendChild(userDiv);
     userInput.value = "";
 
-    // 2. تجهيز مكان رد "شاهين"
+    // 2. إنشاء مكان لرد "شاهين"
     const botDiv = document.createElement('div');
-    botDiv.style.cssText = "color: #00ff88; background: #1a1a1a; padding: 15px; border-radius: 10px; margin: 10px 0; align-self: flex-start; max-width: 80%; border-left: 3px solid #00ff88;";
+    botDiv.style.cssText = "color: #00ff88; background: #1a1a1a; padding: 12px; border-radius: 10px; margin: 10px 0; align-self: flex-start; width: fit-content; max-width: 80%; border-left: 3px solid #00ff88;";
     chatContainer.appendChild(botDiv);
 
     try {
@@ -30,7 +33,7 @@ async function sendMessage() {
 
         const data = await response.json();
         
-        // تشغيل تأثير الكتابة
+        // 3. تأثير الكتابة التدريجي
         let index = 0;
         function type() {
             if (index < data.reply.length) {
@@ -43,14 +46,20 @@ async function sendMessage() {
         type();
 
     } catch (error) {
-        botDiv.textContent = "عذراً، حدث خطأ في الاتصال بالسيرفر.";
+        botDiv.textContent = "عذراً سيد محمد، هناك مشكلة في الاتصال بالسيرفر حالياً.";
     }
 }
 
-// ربط الزر الأخضر (الذي في الصورة) بالكود
-document.querySelector('.send-btn')?.addEventListener('click', sendMessage);
+// ربط الكود بالزر الأخضر الموجود في الصورة
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.send-btn') || e.target.closest('button')) {
+        sendMessage();
+    }
+});
 
-// تفعيل الإرسال بـ Enter
-document.querySelector('input')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
+// ربط الكود بضغط زر Enter
+document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
 });
