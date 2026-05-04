@@ -1,65 +1,54 @@
-// دالة إرسال الرسالة
-async function sendMessage() {
-    // محاولة إيجاد حقل الكتابة بأكثر من طريقة
-    const userInput = document.querySelector('input[type="text"]') || document.querySelector('.input-field') || document.getElementById('user-input');
-    // محاولة إيجاد حاوية المحادثة
-    const chatContainer = document.querySelector('.main-content') || document.getElementById('chat-container');
-    
-    const message = userInput.value.trim();
-    if (message === "") return;
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. تحديد العناصر من الواجهة التي ظهرت في الصورة
+    const sendBtn = document.querySelector('.send-btn') || document.querySelector('button');
+    const inputField = document.querySelector('input[type="text"]');
+    const chatContent = document.querySelector('.main-content');
 
-    // إخفاء رسالة الترحيب "كيف يمكنني مساعدتك" عند أول رسالة
-    const welcomeSection = document.querySelector('.welcome-section') || document.querySelector('h1')?.parentElement;
-    if (welcomeSection) welcomeSection.style.display = 'none';
+    async function handleSend() {
+        const text = inputField.value.trim();
+        if (!text) return;
 
-    // 1. إضافة رسالة المستخدم للواجهة بتنسيق فوري
-    const userDiv = document.createElement('div');
-    userDiv.style.cssText = "color: white; background: #2d2d2d; padding: 12px; border-radius: 10px; margin: 10px 0; align-self: flex-end; width: fit-content; max-width: 80%; margin-left: auto;";
-    userDiv.textContent = message;
-    chatContainer.appendChild(userDiv);
-    userInput.value = "";
+        // إخفاء رسالة الترحيب
+        const welcome = document.querySelector('.welcome-section');
+        if (welcome) welcome.style.display = 'none';
 
-    // 2. إنشاء مكان لرد "شاهين"
-    const botDiv = document.createElement('div');
-    botDiv.style.cssText = "color: #00ff88; background: #1a1a1a; padding: 12px; border-radius: 10px; margin: 10px 0; align-self: flex-start; width: fit-content; max-width: 80%; border-left: 3px solid #00ff88;";
-    chatContainer.appendChild(botDiv);
+        // 2. إضافة رسالة المستخدم
+        const uDiv = document.createElement('div');
+        uDiv.style.cssText = "color: white; background: #2d2d2d; padding: 12px; border-radius: 10px; margin: 10px 0; align-self: flex-end; margin-left: auto; max-width: 80%;";
+        uDiv.textContent = text;
+        chatContent.appendChild(uDiv);
+        inputField.value = "";
 
-    try {
-        const response = await fetch('https://shaheen-backend-o6p47v47oa-uc.a.run.app/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: message })
-        });
+        // 3. إضافة مكان رد "شاهين"
+        const bDiv = document.createElement('div');
+        bDiv.style.cssText = "color: #00ff88; background: #1a1a1a; padding: 12px; border-radius: 10px; margin: 10px 0; border-left: 3px solid #00ff88; max-width: 80%;";
+        chatContent.appendChild(bDiv);
 
-        const data = await response.json();
-        
-        // 3. تأثير الكتابة التدريجي
-        let index = 0;
-        function type() {
-            if (index < data.reply.length) {
-                botDiv.innerHTML += data.reply.charAt(index);
-                index++;
-                setTimeout(type, 30);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+        try {
+            const res = await fetch('https://shaheen-backend-o6p47v47oa-uc.a.run.app/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await res.json();
+            
+            // تأثير الكتابة التدريجي
+            let i = 0;
+            function type() {
+                if (i < data.reply.length) {
+                    bDiv.innerHTML += data.reply.charAt(i);
+                    i++;
+                    setTimeout(type, 30);
+                    chatContent.scrollTop = chatContent.scrollHeight;
+                }
             }
+            type();
+        } catch (e) {
+            bDiv.textContent = "خطأ في الاتصال بالسيرفر.";
         }
-        type();
-
-    } catch (error) {
-        botDiv.textContent = "عذراً سيد محمد، هناك مشكلة في الاتصال بالسيرفر حالياً.";
     }
-}
 
-// ربط الكود بالزر الأخضر الموجود في الصورة
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.send-btn') || e.target.closest('button')) {
-        sendMessage();
-    }
-});
-
-// ربط الكود بضغط زر Enter
-document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
+    // ربط الأحداث
+    sendBtn.onclick = handleSend;
+    inputField.onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
 });
