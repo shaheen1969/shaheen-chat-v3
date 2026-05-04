@@ -1,45 +1,27 @@
-// دالة تأثير الكتابة التدريجي
-function typeEffect(element, text, speed = 30) {
-    let index = 0;
-    element.innerHTML = ""; // تفريغ المكان قبل البدء
-    
-    function play() {
-        if (index < text.length) {
-            element.innerHTML += text.charAt(index);
-            index++;
-            setTimeout(play, speed);
-            
-            // النزول التلقائي لأسفل المحادثة أثناء الكتابة
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    }
-    play();
-}
-
-// الدالة الأساسية لإرسال الرسالة وعرض الرد
 async function sendMessage() {
-    const userInput = document.getElementById('user-input');
-    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.querySelector('input[type="text"]') || document.getElementById('user-input');
+    const chatContainer = document.querySelector('.main-content') || document.getElementById('chat-container');
     const message = userInput.value.trim();
 
     if (message === "") return;
 
+    // إخفاء رسالة الترحيب عند بدء المحادثة
+    const welcomeSection = document.querySelector('.welcome-section');
+    if (welcomeSection) welcomeSection.style.display = 'none';
+
     // 1. عرض رسالة المستخدم
     const userDiv = document.createElement('div');
-    userDiv.className = 'message user-message';
+    userDiv.style.cssText = "color: white; background: #2d2d2d; padding: 15px; border-radius: 10px; margin: 10px 0; align-self: flex-end; max-width: 80%;";
     userDiv.textContent = message;
     chatContainer.appendChild(userDiv);
     userInput.value = "";
 
-    // 2. تجهيز مكان رد "شاهين" (فارغ في البداية)
+    // 2. تجهيز مكان رد "شاهين"
     const botDiv = document.createElement('div');
-    botDiv.className = 'message bot-message typing';
+    botDiv.style.cssText = "color: #00ff88; background: #1a1a1a; padding: 15px; border-radius: 10px; margin: 10px 0; align-self: flex-start; max-width: 80%; border-left: 3px solid #00ff88;";
     chatContainer.appendChild(botDiv);
 
     try {
-        // 3. استدعاء واجهة برمجة التطبيقات (API)
-        // ملاحظة: استبدل الرابط أدناه برابط الـ Backend الخاص بك إذا تغير
         const response = await fetch('https://shaheen-backend-o6p47v47oa-uc.a.run.app/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -48,19 +30,27 @@ async function sendMessage() {
 
         const data = await response.json();
         
-        // 4. تشغيل تأثير الكتابة على الرد القادم من السيرفر
-        typeEffect(botDiv, data.reply);
-        botDiv.classList.remove('typing');
+        // تشغيل تأثير الكتابة
+        let index = 0;
+        function type() {
+            if (index < data.reply.length) {
+                botDiv.innerHTML += data.reply.charAt(index);
+                index++;
+                setTimeout(type, 30);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+        type();
 
     } catch (error) {
-        botDiv.textContent = "عذراً سيد محمد، حدث خطأ في الاتصال. يرجى المحاولة لاحقاً.";
-        botDiv.classList.remove('typing');
+        botDiv.textContent = "عذراً، حدث خطأ في الاتصال بالسيرفر.";
     }
 }
 
-// تفعيل الإرسال عند الضغط على زر Enter
-document.getElementById('user-input').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
+// ربط الزر الأخضر (الذي في الصورة) بالكود
+document.querySelector('.send-btn')?.addEventListener('click', sendMessage);
+
+// تفعيل الإرسال بـ Enter
+document.querySelector('input')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
 });
