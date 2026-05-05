@@ -1,52 +1,47 @@
 async function handleSend() {
-    const input = document.getElementById('user-query'); // أو معرف الإدخال لديك
-    const display = document.getElementById('chat-display'); // منطقة عرض الرسائل
+    const input = document.getElementById('user-query');
+    const display = document.getElementById('chat-display');
     const query = input.value.trim();
 
-    if (!query) return; // منع الإرسال الفارغ
+    if (!query) return;
 
-    // 1. عرض رسالة المستخدم أولاً
+    // عرض رسالة المستخدم
     display.innerHTML += `<div class="message user-msg">${query}</div>`;
-    input.value = ""; // تنظيف الحقل فوراً
+    input.value = "";
     display.scrollTop = display.scrollHeight;
 
-    // 2. إنشاء loadingId فريد وضمان وجوده في الـ DOM
+    // إنشاء عنصر الرد المؤقت
     const loadingId = "bot-response-" + Date.now();
-    
-    // إنشاء عنصر الرسالة كـ Object لضمان التحكم به قبل الإضافة
     const botMessageElement = document.createElement('div');
     botMessageElement.className = 'message bot-msg';
-    botMessageElement.id = loadingId; // ربط المعرف هنا هو السر
+    botMessageElement.id = loadingId;
     botMessageElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحليل...';
-    
     display.appendChild(botMessageElement);
     display.scrollTop = display.scrollHeight;
 
     try {
-        // 3. الاتصال بالمحرك المحدث في Streamlit
-        const response = await fetch('https://shaheen-backend-a5huxtb3zxkpvacbggancq.streamlit.app/chat', {
+        // الاتصال بالسيرفر الجديد على Railway
+        const response = await fetch('https://shaheen-backend.up.railway.app/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: query })
         });
 
-        if (!response.ok) throw new Error('سيرفر Streamlit غير مستجيب');
+        if (!response.ok) throw new Error('سيرفر غير مستجيب');
 
         const data = await response.json();
         
-        // 4. تحديث نفس العنصر بالرد الحقيقي
         const targetElement = document.getElementById(loadingId);
         if (targetElement) {
             targetElement.innerHTML = `<b>شاهين شات:</b><br>${data.reply}`;
         }
 
     } catch (e) {
-        // 5. معالجة الأخطاء برسالة بسيطة دون تفاصيل تقنية مزعجة
         const errorElement = document.getElementById(loadingId);
         if (errorElement) {
-            errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> نعتذر عن هذا التأخير اللحظي، يرجى المحاولة مرة أخرى.';
+            errorElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> نعتذر، حدث خطأ. حاول مرة أخرى.';
         }
-        console.error("Diagnostic Log:", e);
+        console.error("Error:", e);
     }
     
     display.scrollTop = display.scrollHeight;
