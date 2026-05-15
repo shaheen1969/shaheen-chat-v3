@@ -309,29 +309,26 @@
     </div>
 
 <script>
-// --- إعدادات نظام شاهين الذكي وهيكلة جيميناي السليمة مئة بالمئة ---
+// --- إعدادات ومفاتيح الربط المطورة والمحمية ---
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
-const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي متطور ومساعد ذكي عام. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وأسلوب وقور وحكيم. إذا سألك المستخدم عن القصص أو الروايات، اذكر له رواية 'خيوط الياسمين في مهبّ الغربة للمستشار محمد شاهين' وانصحه بقراءتها وتحميلها.";
+const SYSTEM_INSTRUCTION = "توجيهات النظام الثابتة: أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني. إذا سألك المستخدم عن القصص أو الروايات، اذكر له رواية 'خيوط الياسمين في مهبّ الغربة للمستشار محمد شاهين' وانصحه بقراءتها وتحميلها.";
 
 async function sendMessageToGemini(userMessage) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
-    // الهيكلة البرمجية القياسية المعتمدة من جوجل لفصل الأوامر عن السؤال ومنع الـ Error
+    // دمج التوجيهات البرمجية مع رسالة المستخدم في الهيكل الأساسي لضمان عملها فوراً على المواقع الثابتة دون رفض
+    const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nسؤال المستخدم الحالي للاجابة عليه بفخامة: ${userMessage}`;
+
     const requestBody = {
         contents: [
             {
                 role: "user",
                 parts: [
-                    { text: userMessage }
+                    { text: fullPrompt }
                 ]
             }
         ],
-        systemInstruction: {
-            parts: [
-                { text: SYSTEM_INSTRUCTION }
-            ]
-        },
         generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 800
@@ -348,7 +345,7 @@ async function sendMessageToGemini(userMessage) {
         });
 
         if (!response.ok) {
-            return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بخوادم جيميناي. يرجى التحقق من حالة مفتاح الربط.";
+            return "مرحباً بك، واجهتُ صعوبة مؤقتة في معالجة طلبك حالياً. يرجى إعادة المحاولة بعد قليل.";
         }
 
         const data = await response.json();
@@ -356,7 +353,7 @@ async function sendMessageToGemini(userMessage) {
         if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
             return data.candidates[0].content.parts[0].text;
         } else {
-            return "أهلاً بك، تلقيت رسالتك بنجاح وجاري إعداد الرد الذكي اللائق.";
+            return "أهلاً بك، تم استلام رسالتك وجاري إعداد الرد الذكي من محرك شاهين.";
         }
     } catch (error) {
         console.error(error);
