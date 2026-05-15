@@ -167,7 +167,7 @@
     </div>
 
 <script>
-// ضع مفتاح الـ API الجديد الذي استخرجته بدقة هنا بين علامتي التنصيص
+// ضع مفتاح الـ API الجديد والمستخرج بعناية هنا بين علامتي التنصيص
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
 const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني.";
@@ -192,16 +192,18 @@ async function sendMessageToGemini(userMessage) {
 
         const data = await response.json();
         
-        // التعديل الجوهري لقراءة الرد بنجاح مهما اختلف هيكل جوجل الداخلي
+        // كاشف الأخطاء الذكي لطباعة سبب المشكلة الحقيقي على الشاشة فوراً
+        if (data.error) {
+            return "❌ خطأ مباشر من خوادم جوجل جيميناي: " + data.error.message + " (كود الخطأ: " + data.error.code + ")";
+        }
+        
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
             return data.candidates[0].content.parts[0].text;
-        } else if (data.error) {
-            return "تنبيه النظام: " + data.error.message;
         } else {
-            return "مرحباً بك، تم معالجة الرسالة بنجاح ولكن استجابة النص تتطلب تحديثاً.";
+            return "مرحباً بك، تم معالجة الرسالة ولكن استجابة النص فارغة من المصدر.";
         }
     } catch (error) {
-        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بالخادم الرئيسي.";
+        return "❌ خطأ برمي في المتصفح (Network/CORS): " + error.message;
     }
 }
 
@@ -221,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const aiResponse = await sendMessageToGemini(messageText);
             removeLoadingMessage();
-            appendMessage(aiResponse, "assistant", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
+            appendMessage(aiResponse, "assistant", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'\'">');
         }
 
         sendButton.addEventListener("click", handleSend);
