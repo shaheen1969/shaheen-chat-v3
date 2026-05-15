@@ -117,7 +117,7 @@
 </div>
 
 <script>
-// --- إعدادات الحوكمة والربط الذكي ---
+// --- إعدادات الحوكمة والربط الذكي المستقر ---
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
 const SYSTEM_INSTRUCTION = `
@@ -127,7 +127,8 @@ const SYSTEM_INSTRUCTION = `
 `;
 
 async function sendMessageToGemini(userMessage) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // تم التعديل هنا إلى النسخة المستقرة 1.5 بنجاح
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     const requestBody = {
         contents: [{ role: "user", parts: [{ text: userMessage }] }],
         systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
