@@ -167,13 +167,14 @@
     </div>
 
 <script>
-// ضع مفتاح الـ API الجديد والمستخرج بعناية هنا بين علامتي التنصيص
+// ضع مفتاح الـ API الجديد تماماً والخاص بك هنا بين علامتي التنصيص
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
 const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني.";
 
 async function sendMessageToGemini(userMessage) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // تحديث الرابط إلى النسخة v1 المستقرة والمدعومة رسمياً للمتصفحات والمواقع الثابتة لقراءة محرك الـ flash أو الـ pro مباشرة
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
     
     const requestBody = {
         contents: [{
@@ -192,9 +193,8 @@ async function sendMessageToGemini(userMessage) {
 
         const data = await response.json();
         
-        // كاشف الأخطاء الذكي لطباعة سبب المشكلة الحقيقي على الشاشة فوراً
         if (data.error) {
-            return "❌ خطأ مباشر من خوادم جوجل جيميناي: " + data.error.message + " (كود الخطأ: " + data.error.code + ")";
+            return "❌ تنبيه من خوادم جوجل: " + data.error.message;
         }
         
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
@@ -203,7 +203,7 @@ async function sendMessageToGemini(userMessage) {
             return "مرحباً بك، تم معالجة الرسالة ولكن استجابة النص فارغة من المصدر.";
         }
     } catch (error) {
-        return "❌ خطأ برمي في المتصفح (Network/CORS): " + error.message;
+        return "❌ خطأ برمي في المتصفح: " + error.message;
     }
 }
 
