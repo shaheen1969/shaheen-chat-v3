@@ -84,7 +84,7 @@
         
         /* منطقة الشات الرئيسية */
         .chat-container { flex: 1; display: flex; flex-direction: column; background-color: #131314; position: relative; }
-        .chat-window { flex: 1; padding: 30px 10% 120px 10%; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
+        .chat-window { flex: 1; padding: 30px 10% 150px 10%; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
         
         /* تصميم الرسائل */
         .message { display: flex; gap: 15px; padding: 12px 18px; border-radius: 12px; max-width: 85%; line-height: 1.7; font-size: 16px; align-items: flex-start; }
@@ -96,6 +96,42 @@
         .message.assistant .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .message-text { flex: 1; white-space: pre-wrap; padding-top: 4px; }
         .message.loading .message-text { color: #9aa0a6; font-style: italic; }
+        
+        /* شبكة البطاقات السريعة - تشبه جيميناي */
+        .suggestion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            width: 100%;
+        }
+        .suggestion-card {
+            background-color: #1e1f20;
+            border: 1px solid #3c4043;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 120px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .suggestion-card:hover {
+            background-color: #2b2c2d;
+            transform: translateY(-2px);
+        }
+        .suggestion-card .card-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e3e3e3;
+            line-height: 1.5;
+        }
+        .suggestion-card .card-icon {
+            align-self: flex-end;
+            font-size: 20px;
+            color: #8ab4f8;
+        }
         
         /* منطقة الإدخال السفلية */
         .chat-input-wrapper { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 10%; background: linear-gradient(transparent, #131314 30%); }
@@ -156,6 +192,33 @@
                 </div>
                 <div class="message-text">مرحباً بك في منصة شاهين شات الذكية العامة. أنا مساعدك الشخصي المدعوم بأحدث تقنيات الذكاء الاصطناعي، كيف يمكنني مساعدتك اليوم؟</div>
             </div>
+            
+            <div class="suggestion-grid" id="suggestion-grid">
+                <div class="suggestion-card" onclick="sendSuggestion('إنشاء صورة فنية مبتكرة')">
+                    <span class="card-text">إنشاء صورة</span>
+                    <span class="card-icon"><i class="fa-solid fa-image"></i></span>
+                </div>
+                <div class="suggestion-card" onclick="sendSuggestion('تأليف موسيقى ونغمات ملهمة')">
+                    <span class="card-text">إنشاء موسيقى</span>
+                    <span class="card-icon"><i class="fa-solid fa-music"></i></span>
+                </div>
+                <div class="suggestion-card" onclick="sendSuggestion('توليد مقطع فيديو ومقاطع تفاعلية')">
+                    <span class="card-text">أنشئ فيديو</span>
+                    <span class="card-icon"><i class="fa-solid fa-video"></i></span>
+                </div>
+                <div class="suggestion-card" onclick="sendSuggestion('كتابة مقال أو فكرة إبداعية')">
+                    <span class="card-text">كتابة أي شيء</span>
+                    <span class="card-icon"><i class="fa-solid fa-pen-nib"></i></span>
+                </div>
+                <div class="suggestion-card" onclick="sendSuggestion('ساعدني في تعلم مهارة أو موضوع جديد اليوم')">
+                    <span class="card-text">ساعِدني في التعلّم</span>
+                    <span class="card-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                </div>
+                <div class="suggestion-card" onclick="sendSuggestion('أفكار لتعزيز طاقتي وإنتاجيتي اليوم بنجاح')">
+                    <span class="card-text">عزِّز طاقتي وإنتاجيتي</span>
+                    <span class="card-icon"><i class="fa-solid fa-bolt"></i></span>
+                </div>
+            </div>
         </div>
 
         <div class="chat-input-wrapper">
@@ -167,14 +230,13 @@
     </div>
 
 <script>
-// ضع مفتاح الـ API الجديد تماماً والخاص بك هنا بين علامتي التنصيص
-const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
+// تأكد من وضع مفتاح الـ API الجديد تماماً والخاص بك هنا بدقة مكان الجملة أدناه
+const GEMINI_API_KEY = "ضع_مفتاح_جيميني_الجديد_هنا"; 
 
 const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني.";
 
 async function sendMessageToGemini(userMessage) {
-    // تحديث الرابط إلى النسخة v1 المستقرة والمدعومة رسمياً للمتصفحات والمواقع الثابتة لقراءة محرك الـ flash أو الـ pro مباشرة
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
     const requestBody = {
         contents: [{
@@ -207,44 +269,59 @@ async function sendMessageToGemini(userMessage) {
     }
 }
 
+let inputElement, sendBtnElement;
+
 document.addEventListener("DOMContentLoaded", () => {
-    const chatInput = document.getElementById("chat-input");
-    const sendButton = document.getElementById("send-button");
+    inputElement = document.getElementById("chat-input");
+    sendBtnElement = document.getElementById("send-button");
     const chatWindow = document.getElementById("chat-window");
 
-    if (sendButton && chatInput) {
-        async function handleSend() {
-            const messageText = chatInput.value.trim();
-            if (!messageText) return;
-
-            appendMessage(messageText, "user", '<i class="fa-solid fa-user"></i>');
-            chatInput.value = "";
-            appendMessage("جاري التفكير وتحليل البيانات...", "loading", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
-
-            const aiResponse = await sendMessageToGemini(messageText);
-            removeLoadingMessage();
-            appendMessage(aiResponse, "assistant", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'\'">');
-        }
-
-        sendButton.addEventListener("click", handleSend);
-        chatInput.addEventListener("keypress", (e) => { if (e.key === "Enter") handleSend(); });
-    }
-
-    function appendMessage(text, sender, avatarContent) {
-        if (!chatWindow) return;
-        const msgDiv = document.createElement("div");
-        msgDiv.className = `message ${sender}`;
-        if (sender === "loading") msgDiv.id = "gemini-loading";
-        msgDiv.innerHTML = `<div class="message-avatar">${avatarContent}</div><div class="message-text">${text}</div>`;
-        chatWindow.appendChild(msgDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function removeLoadingMessage() {
-        const loadingDiv = document.getElementById("gemini-loading");
-        if (loadingDiv) loadingDiv.remove();
+    if (sendBtnElement && inputElement) {
+        sendBtnElement.addEventListener("click", handleSend);
+        inputElement.addEventListener("keypress", (e) => { if (e.key === "Enter") handleSend(); });
     }
 });
+
+async function handleSend() {
+    const messageText = inputElement.value.trim();
+    if (!messageText) return;
+
+    // إخفاء شبكة البطاقات الترحيبية عند إرسال أول رسالة لتوفير مساحة
+    const grid = document.getElementById("suggestion-grid");
+    if (grid) grid.style.display = "none";
+
+    appendMessage(messageText, "user", '<i class="fa-solid fa-user"></i>');
+    inputElement.value = "";
+    appendMessage("جاري التفكير وتحليل البيانات...", "loading", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
+
+    const aiResponse = await sendMessageToGemini(messageText);
+    removeLoadingMessage();
+    appendMessage(aiResponse, "assistant", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'\'">');
+}
+
+// دالة الضغط على بطاقات الخيارات السريعة وإرسالها فوراً
+function sendSuggestion(text) {
+    if (inputElement) {
+        inputElement.value = text;
+        handleSend();
+    }
+}
+
+function appendMessage(text, sender, avatarContent) {
+    const chatWindow = document.getElementById("chat-window");
+    if (!chatWindow) return;
+    const msgDiv = document.createElement("div");
+    msgDiv.className = `message ${sender}`;
+    if (sender === "loading") msgDiv.id = "gemini-loading";
+    msgDiv.innerHTML = `<div class="message-avatar">${avatarContent}</div><div class="message-text">${text}</div>`;
+    chatWindow.appendChild(msgDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function removeLoadingMessage() {
+    const loadingDiv = document.getElementById("gemini-loading");
+    if (loadingDiv) loadingDiv.remove();
+}
 </script>
 
 </body>
