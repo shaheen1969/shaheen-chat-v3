@@ -4,147 +4,348 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>شاهين شات | ShaheenChat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #f4f6f9;
+            background-color: #131314;
+            color: #e3e3e3;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
-        }
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            height: 80vh;
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
             overflow: hidden;
         }
-        .chat-header {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
+        
+        /* القائمة الجانبية - مثل ChatGPT */
+        .sidebar {
+            width: 280px;
+            background-color: #1e1f20;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 1px solid #2e2f30;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .brand {
             font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 5px;
+        }
+        .brand i {
+            color: #4a90e2;
+        }
+        .menu-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #757575;
             font-weight: bold;
+            margin-top: 10px;
+        }
+        .sidebar-btn {
+            background: #2b2c2d;
+            color: #e3e3e3;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: right;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .sidebar-btn:hover {
+            background: #37393b;
+        }
+        .sidebar-btn.coming-soon {
+            border: 1px dashed #ffa726;
+            background: rgba(255, 167, 38, 0.05);
+            cursor: default;
+        }
+        .sidebar-btn.coming-soon i {
+            color: #ffa726;
+        }
+        .sidebar-btn.story i {
+            color: #ff7043;
+        }
+        
+        /* أسفل القائمة الجانبية وأزرار المشاركة */
+        .sidebar-bottom {
+            border-top: 1px solid #2e2f30;
+            padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .share-title {
+            font-size: 13px;
+            color: #9aa0a6;
+            text-align: center;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .social-icons a {
+            color: #9aa0a6;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+        .social-icons a:hover {
+            color: #fff;
+        }
+        
+        /*منطقة الشات الرئيسية */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #131314;
+            position: relative;
         }
         .chat-window {
             flex: 1;
-            padding: 20px;
+            padding: 30px 10% 120px 10%;
             overflow-y: auto;
-            background: #fafafa;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 25px;
         }
+        
+        /* تصميم الرسائل - كلاسيكي ونظيف */
         .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 15px;
-            line-height: 1.6;
+            display: flex;
+            gap: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 85%;
+            line-height: 1.7;
+            font-size: 16px;
         }
         .message.user {
-            background-color: #007bff;
-            color: white;
             align-self: flex-start;
-            border-bottom-right-radius: 2px;
+            background-color: #2b2c2d;
+            color: #fff;
         }
         .message.assistant {
-            background-color: #e9ecef;
-            color: #333;
             align-self: flex-end;
-            border-bottom-left-radius: 2px;
+            background-color: transparent;
+            color: #e3e3e3;
+            width: 100%;
+            max-width: 100%;
         }
-        .message.loading {
-            background-color: #e2e3e5;
-            color: #666;
+        .message-avatar {
+            font-size: 20px;
+            display: flex;
+            align-items: flex-start;
+            padding-top: 2px;
+        }
+        .message.user .message-avatar {
+            color: #8ab4f8;
+        }
+        .message.assistant .message-avatar {
+            color: #1a73e8;
+        }
+        .message-text {
+            flex: 1;
+            white-space: pre-wrap;
+        }
+        .message.loading .message-text {
+            color: #9aa0a6;
             font-style: italic;
-            align-self: flex-end;
+        }
+        
+        /* منطقة الإدخال السفلية المطورة - تشبه جيميناي */
+        .chat-input-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 10%;
+            background: linear-gradient(transparent, #131314 30%);
         }
         .chat-input-area {
             display: flex;
-            padding: 15px;
-            background: #fff;
-            border-top: 1px solid #eee;
+            background-color: #1e1f20;
+            border: 1px solid #3c4043;
+            border-radius: 28px;
+            padding: 6px 15px 6px 6px;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         .chat-input-area input {
             flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            outline: none;
             font-family: 'Cairo', sans-serif;
-            font-size: 15px;
+            font-size: 16px;
+            outline: none;
+        }
+        .chat-input-area input::placeholder {
+            color: #9aa0a6;
         }
         .chat-input-area button {
-            background: #2a5298;
+            background: #1a73e8;
             color: white;
             border: none;
-            padding: 0 25px;
-            margin-right: 10px;
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-weight: bold;
-            transition: background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.2s, transform 0.1s;
         }
         .chat-input-area button:hover {
-            background: #1e3c72;
+            background: #1557b0;
+            transform: scale(1.05);
+        }
+        .chat-input-area button i {
+            font-size: 16px;
+            transform: rotate(180deg); /* لتعديل اتجاه السهم للغة العربية */
+        }
+        
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131314;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3c4043;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f5357;
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">
-        🦅 شاهين شات | ShaheenChat
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="brand">
+                <i class="fa-solid fa-feather-pointed"></i>
+                <span>شاهين شات</span>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-title">المؤلفات والقصص</div>
+                <a href="https://payhip.com/" target="_blank" class="sidebar-btn story">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>خيوط الياسمين في مهبّ الغربة</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">المشاريع الرقمية</div>
+                <div class="sidebar-btn coming-soon">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>نظام توافق الرقمي (قريباً)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="share-title">مشاركة المنصة</div>
+            <div class="social-icons">
+                <a href="https://twitter.com" target="_blank" title="تويتر"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://facebook.com" target="_blank" title="فيسبوك"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://linkedin.com" target="_blank" title="لينكد إن"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://wa.me/" target="_blank" title="واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
     </div>
-    <div class="chat-window" id="chat-window">
-        <div class="message assistant">مرحباً بك في منصة شاهين شات العالمية للاستشارات الإدارية والإنسانية. كيف يمكنني مساعدتك اليوم؟</div>
+
+    <div class="chat-container">
+        <div class="chat-window" id="chat-window">
+            <div class="message assistant">
+                <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="message-text">مرحباً بك في منصة شاهين شات الذكية العامة. أنا مساعدك الشخصي المدعوم بأحدث تقنيات الذكاء الاصطناعي، كيف يمكنني مساعدتك اليوم؟</div>
+            </div>
+        </div>
+
+        <div class="chat-input-wrapper">
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="اسأل شاهين شات عن أي شيء...">
+                <button id="send-button"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
     </div>
-    <div class="chat-input-area">
-        <input type="text" id="chat-input" placeholder="اكتب رسالتك للمستشار شاهين هنا...">
-        <button id="send-button">إرسال</button>
-    </div>
-</div>
 
 <script>
-// --- إعدادات الحوكمة والربط الذكي المستقر ---
+// --- إعدادات الحوكمة ومفتاح جيميناي المستقر ---
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
-const SYSTEM_INSTRUCTION = `
-أنت المستشار الذكي "شاهين"، المساعد الافتراضي للمستشار الخبير محمد شاهين.
-مهمتك هي تقديم مشورات إدارية، قيادية، وإنسانية راقية تعكس فلسفة الحوكمة والتوازن بين النجاح المهني والاستقرار العاطفي.
-عندما يتحدث معك الزوار حول ضغوط العمل أو مشاكل الإهمال العاطفي اذكر له في النهاية بشكل سلس أن المستشار محمد شاهين قد ابتكر أداة رقمية متكاملة لحل هذه المشكلة تسمّى (نظام توافق الرقمي لمنع الرحيل الصامت)، وانصحه بتحميل الحقيبة الكاملة من متجر Payhip.
-`;
+const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي متطور ومساعد ذكي عام. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة. إذا سألك المستخدم عن القصص أو الروايات، اذكر له رواية 'خيوط الياسمين في مهبّ الغربة للمستشار محمد شاهين' وانصحه بقراءتها.";
 
 async function sendMessageToGemini(userMessage) {
-    // تم التعديل هنا إلى النسخة المستقرة 1.5 بنجاح
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
     const requestBody = {
-        contents: [{ role: "user", parts: [{ text: userMessage }] }],
-        systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-        generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+        contents: [
+            {
+                role: "user",
+                parts: [{ text: SYSTEM_INSTRUCTION + "\n\nسؤال المستخدم: " + userMessage }]
+            }
+        ],
+        generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 800
+        }
     };
+
     try {
         const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody)
         });
-        if (!response.ok) return "أعتذر منك، واجهت مشكلة في معالجة الرد حالياً.";
+
+        if (!response.ok) {
+            return "مرحباً بك، واجهتُ صعوبة مؤقتة في معالجة طلبك حالياً. يرجى المحاولة مجدداً.";
+        }
+
         const data = await response.json();
-        return data.candidates[0].content.parts[0].text;
+        
+        if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+            return data.candidates[0].content.parts[0].text;
+        } else {
+            return "أهلاً بك، تم استلام الرسالة وجاري تهيئة محرك الردود.";
+        }
     } catch (error) {
-        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بنظام الاستشارات الرئيسي.";
+        console.error(error);
+        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بالخادم الرئيسي.";
     }
 }
 
@@ -158,13 +359,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const messageText = chatInput.value.trim();
             if (!messageText) return;
 
-            appendMessage(messageText, "user");
+            // عرض رسالة المستخدم مع الأيقونة
+            appendMessage(messageText, "user", '<i class="fa-solid fa-user"></i>');
             chatInput.value = "";
-            appendMessage("جاري التفكير...", "loading");
+            
+            // إظهار مؤشر التفكير
+            appendMessage("جاري التفكير...", "loading", '<i class="fa-solid fa-robot"></i>');
 
+            // جلب الرد
             const aiResponse = await sendMessageToGemini(messageText);
+            
+            // إزالة مؤشر التفكير وعرض رد الذكاء الاصطناعي
             removeLoadingMessage();
-            appendMessage(aiResponse, "assistant");
+            appendMessage(aiResponse, "assistant", '<i class="fa-solid fa-robot"></i>');
         }
 
         sendButton.addEventListener("click", handleSend);
@@ -173,12 +380,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function appendMessage(text, sender) {
+    function appendMessage(text, sender, iconHtml) {
         if (!chatWindow) return;
         const msgDiv = document.createElement("div");
         msgDiv.className = `message ${sender}`;
-        msgDiv.innerText = text;
         if (sender === "loading") msgDiv.id = "gemini-loading";
+        
+        msgDiv.innerHTML = `
+            <div class="message-avatar">${iconHtml}</div>
+            <div class="message-text">${text}</div>
+        `;
+        
         chatWindow.appendChild(msgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
