@@ -22,7 +22,7 @@
             overflow: hidden;
         }
         
-        /* القائمة الجانبية - مثل ChatGPT */
+        /* القائمة الجانبية (Sidebar) */
         .sidebar {
             width: 280px;
             background-color: #1e1f20;
@@ -121,7 +121,7 @@
             color: #fff;
         }
         
-        /*منطقة الشات الرئيسية */
+        /* منطقة الشات الرئيسية */
         .chat-container {
             flex: 1;
             display: flex;
@@ -138,15 +138,16 @@
             gap: 25px;
         }
         
-        /* تصميم الرسائل - كلاسيكي ونظيف */
+        /* تصميم الرسائل المطور */
         .message {
             display: flex;
             gap: 15px;
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 12px 18px;
+            border-radius: 12px;
             max-width: 85%;
             line-height: 1.7;
             font-size: 16px;
+            align-items: flex-start;
         }
         .message.user {
             align-self: flex-start;
@@ -160,28 +161,39 @@
             width: 100%;
             max-width: 100%;
         }
+        
+        /* تصميم أيقونات وصورة الصقر الدائرية */
         .message-avatar {
-            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
-            align-items: flex-start;
-            padding-top: 2px;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            overflow: hidden;
         }
         .message.user .message-avatar {
+            background-color: #37393b;
             color: #8ab4f8;
+            font-size: 18px;
         }
-        .message.assistant .message-avatar {
-            color: #1a73e8;
+        .message.assistant .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .message-text {
             flex: 1;
             white-space: pre-wrap;
+            padding-top: 4px;
         }
         .message.loading .message-text {
             color: #9aa0a6;
             font-style: italic;
         }
         
-        /* منطقة الإدخال السفلية المطورة - تشبه جيميناي */
+        /* منطقة الإدخال السفلية */
         .chat-input-wrapper {
             position: absolute;
             bottom: 0;
@@ -231,23 +243,14 @@
         }
         .chat-input-area button i {
             font-size: 16px;
-            transform: rotate(180deg); /* لتعديل اتجاه السهم للغة العربية */
+            transform: rotate(180deg);
         }
         
-        /* تخصيص شريط التمرير */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #131314;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #3c4043;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4f5357;
-        }
+        /* شريط التمرير */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #131314; }
+        ::-webkit-scrollbar-thumb { background: #3c4043; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f5357; }
     </style>
 </head>
 <body>
@@ -290,7 +293,9 @@
     <div class="chat-container">
         <div class="chat-window" id="chat-window">
             <div class="message assistant">
-                <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="message-avatar">
+                    <img src="logo.jpg" alt="شاهين" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'">
+                </div>
                 <div class="message-text">مرحباً بك في منصة شاهين شات الذكية العامة. أنا مساعدك الشخصي المدعوم بأحدث تقنيات الذكاء الاصطناعي، كيف يمكنني مساعدتك اليوم؟</div>
             </div>
         </div>
@@ -304,21 +309,29 @@
     </div>
 
 <script>
-// --- إعدادات الحوكمة ومفتاح جيميناي المستقر ---
+// --- إعدادات نظام شاهين الذكي وهيكلة جيميناي السليمة مئة بالمئة ---
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
-const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي متطور ومساعد ذكي عام. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة. إذا سألك المستخدم عن القصص أو الروايات، اذكر له رواية 'خيوط الياسمين في مهبّ الغربة للمستشار محمد شاهين' وانصحه بقراءتها.";
+const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي متطور ومساعد ذكي عام. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وأسلوب وقور وحكيم. إذا سألك المستخدم عن القصص أو الروايات، اذكر له رواية 'خيوط الياسمين في مهبّ الغربة للمستشار محمد شاهين' وانصحه بقراءتها وتحميلها.";
 
 async function sendMessageToGemini(userMessage) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
+    // الهيكلة البرمجية القياسية المعتمدة من جوجل لفصل الأوامر عن السؤال ومنع الـ Error
     const requestBody = {
         contents: [
             {
                 role: "user",
-                parts: [{ text: SYSTEM_INSTRUCTION + "\n\nسؤال المستخدم: " + userMessage }]
+                parts: [
+                    { text: userMessage }
+                ]
             }
         ],
+        systemInstruction: {
+            parts: [
+                { text: SYSTEM_INSTRUCTION }
+            ]
+        },
         generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 800
@@ -328,12 +341,14 @@ async function sendMessageToGemini(userMessage) {
     try {
         const response = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(requestBody)
         });
 
         if (!response.ok) {
-            return "مرحباً بك، واجهتُ صعوبة مؤقتة في معالجة طلبك حالياً. يرجى المحاولة مجدداً.";
+            return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بخوادم جيميناي. يرجى التحقق من حالة مفتاح الربط.";
         }
 
         const data = await response.json();
@@ -341,11 +356,11 @@ async function sendMessageToGemini(userMessage) {
         if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
             return data.candidates[0].content.parts[0].text;
         } else {
-            return "أهلاً بك، تم استلام الرسالة وجاري تهيئة محرك الردود.";
+            return "أهلاً بك، تلقيت رسالتك بنجاح وجاري إعداد الرد الذكي اللائق.";
         }
     } catch (error) {
         console.error(error);
-        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بالخادم الرئيسي.";
+        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بالخادم الرئيسي للمنصة.";
     }
 }
 
@@ -359,19 +374,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const messageText = chatInput.value.trim();
             if (!messageText) return;
 
-            // عرض رسالة المستخدم مع الأيقونة
+            // عرض رسالة المستخدم بأيقونة الشخص الاحترافية
             appendMessage(messageText, "user", '<i class="fa-solid fa-user"></i>');
             chatInput.value = "";
             
-            // إظهار مؤشر التفكير
-            appendMessage("جاري التفكير...", "loading", '<i class="fa-solid fa-robot"></i>');
+            // إظهار مؤشر التفكير بصورة الصقر
+            appendMessage("جاري التفكير وتحليل البيانات...", "loading", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
 
-            // جلب الرد
+            // جلب الرد الفعلي من جيميناي
             const aiResponse = await sendMessageToGemini(messageText);
             
-            // إزالة مؤشر التفكير وعرض رد الذكاء الاصطناعي
+            // إزالة مؤشر التفكير وعرض الرد النهائي المزين بصورة الصقر
             removeLoadingMessage();
-            appendMessage(aiResponse, "assistant", '<i class="fa-solid fa-robot"></i>');
+            appendMessage(aiResponse, "assistant", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
         }
 
         sendButton.addEventListener("click", handleSend);
@@ -380,14 +395,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function appendMessage(text, sender, iconHtml) {
+    function appendMessage(text, sender, avatarContent) {
         if (!chatWindow) return;
         const msgDiv = document.createElement("div");
         msgDiv.className = `message ${sender}`;
         if (sender === "loading") msgDiv.id = "gemini-loading";
         
         msgDiv.innerHTML = `
-            <div class="message-avatar">${iconHtml}</div>
+            <div class="message-avatar">${avatarContent}</div>
             <div class="message-text">${text}</div>
         `;
         
