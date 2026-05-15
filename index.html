@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Cairo', sans-serif;
             background-color: #131314;
@@ -31,13 +29,8 @@
             justify-content: space-between;
             border-left: 1px solid #2e2f30;
             padding: 15px;
-            transition: all 0.3s ease;
         }
-        .sidebar-top {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .sidebar-top { display: flex; flex-direction: column; gap: 20px; }
         .brand {
             font-size: 20px;
             font-weight: 700;
@@ -47,14 +40,8 @@
             gap: 10px;
             padding: 10px 5px;
         }
-        .brand i {
-            color: #4a90e2;
-        }
-        .menu-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .brand i { color: #4a90e2; }
+        .menu-section { display: flex; flex-direction: column; gap: 10px; }
         .menu-title {
             font-size: 12px;
             text-transform: uppercase;
@@ -79,178 +66,49 @@
             font-size: 14px;
             transition: background 0.2s;
         }
-        .sidebar-btn:hover {
-            background: #37393b;
-        }
+        .sidebar-btn:hover { background: #37393b; }
         .sidebar-btn.coming-soon {
             border: 1px dashed #ffa726;
             background: rgba(255, 167, 38, 0.05);
             cursor: default;
         }
-        .sidebar-btn.coming-soon i {
-            color: #ffa726;
-        }
-        .sidebar-btn.story i {
-            color: #ff7043;
-        }
+        .sidebar-btn.coming-soon i { color: #ffa726; }
+        .sidebar-btn.story i { color: #ff7043; }
         
-        /* أسفل القائمة الجانبية وأزرار المشاركة */
-        .sidebar-bottom {
-            border-top: 1px solid #2e2f30;
-            padding-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .share-title {
-            font-size: 13px;
-            color: #9aa0a6;
-            text-align: center;
-        }
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        .social-icons a {
-            color: #9aa0a6;
-            font-size: 18px;
-            transition: color 0.2s;
-        }
-        .social-icons a:hover {
-            color: #fff;
-        }
+        /* أسفل القائمة الجانبية والمشاركة */
+        .sidebar-bottom { border-top: 1px solid #2e2f30; padding-top: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .share-title { font-size: 13px; color: #9aa0a6; text-align: center; }
+        .social-icons { display: flex; justify-content: center; gap: 15px; }
+        .social-icons a { color: #9aa0a6; font-size: 18px; transition: color 0.2s; }
+        .social-icons a:hover { color: #fff; }
         
         /* منطقة الشات الرئيسية */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #131314;
-            position: relative;
-        }
-        .chat-window {
-            flex: 1;
-            padding: 30px 10% 120px 10%;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
+        .chat-container { flex: 1; display: flex; flex-direction: column; background-color: #131314; position: relative; }
+        .chat-window { flex: 1; padding: 30px 10% 120px 10%; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
         
-        /* تصميم الرسائل المطور */
-        .message {
-            display: flex;
-            gap: 15px;
-            padding: 12px 18px;
-            border-radius: 12px;
-            max-width: 85%;
-            line-height: 1.7;
-            font-size: 16px;
-            align-items: flex-start;
-        }
-        .message.user {
-            align-self: flex-start;
-            background-color: #2b2c2d;
-            color: #fff;
-        }
-        .message.assistant {
-            align-self: flex-end;
-            background-color: transparent;
-            color: #e3e3e3;
-            width: 100%;
-            max-width: 100%;
-        }
+        /* تصميم الرسائل */
+        .message { display: flex; gap: 15px; padding: 12px 18px; border-radius: 12px; max-width: 85%; line-height: 1.7; font-size: 16px; align-items: flex-start; }
+        .message.user { align-self: flex-start; background-color: #2b2c2d; color: #fff; }
+        .message.assistant { align-self: flex-end; background-color: transparent; color: #e3e3e3; width: 100%; max-width: 100%; }
         
-        /* تصميم أيقونات وصورة الصقر الدائرية */
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .message.user .message-avatar {
-            background-color: #37393b;
-            color: #8ab4f8;
-            font-size: 18px;
-        }
-        .message.assistant .message-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .message-text {
-            flex: 1;
-            white-space: pre-wrap;
-            padding-top: 4px;
-        }
-        .message.loading .message-text {
-            color: #9aa0a6;
-            font-style: italic;
-        }
+        .message-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0; overflow: hidden; }
+        .message.user .message-avatar { background-color: #37393b; color: #8ab4f8; font-size: 18px; }
+        .message.assistant .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .message-text { flex: 1; white-space: pre-wrap; padding-top: 4px; }
+        .message.loading .message-text { color: #9aa0a6; font-style: italic; }
         
         /* منطقة الإدخال السفلية */
-        .chat-input-wrapper {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 10%;
-            background: linear-gradient(transparent, #131314 30%);
-        }
-        .chat-input-area {
-            display: flex;
-            background-color: #1e1f20;
-            border: 1px solid #3c4043;
-            border-radius: 28px;
-            padding: 6px 15px 6px 6px;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .chat-input-area input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #fff;
-            padding: 12px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 16px;
-            outline: none;
-        }
-        .chat-input-area input::placeholder {
-            color: #9aa0a6;
-        }
-        .chat-input-area button {
-            background: #1a73e8;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.2s, transform 0.1s;
-        }
-        .chat-input-area button:hover {
-            background: #1557b0;
-            transform: scale(1.05);
-        }
-        .chat-input-area button i {
-            font-size: 16px;
-            transform: rotate(180deg);
-        }
+        .chat-input-wrapper { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 10%; background: linear-gradient(transparent, #131314 30%); }
+        .chat-input-area { display: flex; background-color: #1e1f20; border: 1px solid #3c4043; border-radius: 28px; padding: 6px 15px 6px 6px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .chat-input-area input { flex: 1; background: transparent; border: none; color: #fff; padding: 12px; font-family: 'Cairo', sans-serif; font-size: 16px; outline: none; }
+        .chat-input-area input::placeholder { color: #9aa0a6; }
+        .chat-input-area button { background: #1a73e8; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: background 0.2s, transform 0.1s; }
+        .chat-input-area button:hover { background: #1557b0; transform: scale(1.05); }
+        .chat-input-area button i { font-size: 16px; transform: rotate(180deg); }
         
-        /* شريط التمرير */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #131314; }
         ::-webkit-scrollbar-thumb { background: #3c4043; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4f5357; }
     </style>
 </head>
 <body>
@@ -282,10 +140,10 @@
         <div class="sidebar-bottom">
             <div class="share-title">مشاركة المنصة</div>
             <div class="social-icons">
-                <a href="https://twitter.com" target="_blank" title="تويتر"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="https://facebook.com" target="_blank" title="فيسبوك"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://linkedin.com" target="_blank" title="لينكد إن"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="https://wa.me/" target="_blank" title="واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://linkedin.com" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://wa.me/" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
         </div>
     </div>
@@ -309,55 +167,41 @@
     </div>
 
 <script>
-// --- إعدادات ومفاتيح الربط المطورة والمحمية ---
+// ضع مفتاح الـ API الجديد الذي استخرجته بدقة هنا بين علامتي التنصيص
 const GEMINI_API_KEY = "AIzaSyBMgx-jkVgIjixDus1Lhr1QSvopsXw-vOg"; 
 
-const SYSTEM_INSTRUCTION = "توجيهات النظام الثابتة: أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني. إذا سألك المستخدم عن القصص أو الروايات، اذكر له رواية 'خيوط الياسمين في مهبّ الغربة للمستشار محمد شاهين' وانصحه بقراءتها وتحميلها.";
+const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني.";
 
 async function sendMessageToGemini(userMessage) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
-    // دمج التوجيهات البرمجية مع رسالة المستخدم في الهيكل الأساسي لضمان عملها فوراً على المواقع الثابتة دون رفض
-    const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nسؤال المستخدم الحالي للاجابة عليه بفخامة: ${userMessage}`;
-
     const requestBody = {
-        contents: [
-            {
-                role: "user",
-                parts: [
-                    { text: fullPrompt }
-                ]
-            }
-        ],
-        generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 800
-        }
+        contents: [{
+            role: "user",
+            parts: [{ text: SYSTEM_INSTRUCTION + "\n\nسؤال المستخدم: " + userMessage }]
+        }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
     };
 
     try {
         const response = await fetch(url, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody)
         });
 
-        if (!response.ok) {
-            return "مرحباً بك، واجهتُ صعوبة مؤقتة في معالجة طلبك حالياً. يرجى إعادة المحاولة بعد قليل.";
-        }
-
         const data = await response.json();
         
-        if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) {
+        // التعديل الجوهري لقراءة الرد بنجاح مهما اختلف هيكل جوجل الداخلي
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
             return data.candidates[0].content.parts[0].text;
+        } else if (data.error) {
+            return "تنبيه النظام: " + data.error.message;
         } else {
-            return "أهلاً بك، تم استلام رسالتك وجاري إعداد الرد الذكي من محرك شاهين.";
+            return "مرحباً بك، تم معالجة الرسالة بنجاح ولكن استجابة النص تتطلب تحديثاً.";
         }
     } catch (error) {
-        console.error(error);
-        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بالخادم الرئيسي للمنصة.";
+        return "مرحباً بك، واجهتُ صعوبة مؤقتة في الاتصال بالخادم الرئيسي.";
     }
 }
 
@@ -371,25 +215,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const messageText = chatInput.value.trim();
             if (!messageText) return;
 
-            // عرض رسالة المستخدم بأيقونة الشخص الاحترافية
             appendMessage(messageText, "user", '<i class="fa-solid fa-user"></i>');
             chatInput.value = "";
-            
-            // إظهار مؤشر التفكير بصورة الصقر
             appendMessage("جاري التفكير وتحليل البيانات...", "loading", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
 
-            // جلب الرد الفعلي من جيميناي
             const aiResponse = await sendMessageToGemini(messageText);
-            
-            // إزالة مؤشر التفكير وعرض الرد النهائي المزين بصورة الصقر
             removeLoadingMessage();
             appendMessage(aiResponse, "assistant", '<img src="logo.jpg" alt="شاهين" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/6134/6134346.png\'">');
         }
 
         sendButton.addEventListener("click", handleSend);
-        chatInput.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") handleSend();
-        });
+        chatInput.addEventListener("keypress", (e) => { if (e.key === "Enter") handleSend(); });
     }
 
     function appendMessage(text, sender, avatarContent) {
@@ -397,12 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const msgDiv = document.createElement("div");
         msgDiv.className = `message ${sender}`;
         if (sender === "loading") msgDiv.id = "gemini-loading";
-        
-        msgDiv.innerHTML = `
-            <div class="message-avatar">${avatarContent}</div>
-            <div class="message-text">${text}</div>
-        `;
-        
+        msgDiv.innerHTML = `<div class="message-avatar">${avatarContent}</div><div class="message-text">${text}</div>`;
         chatWindow.appendChild(msgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
