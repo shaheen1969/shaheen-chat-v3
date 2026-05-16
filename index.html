@@ -221,8 +221,8 @@
     </div>
 
 <script>
-// --- هنا الخدعة الأمنية لحماية المفتاح الجديد ---
-// ضع الجزء الأول من مفتاحك الجديد هنا بين علامتي التنصيص (مثال: AIzaSyB...)
+// --- هنا الخدعة الأمنية المعتمدة لحماية مفتاحك الجديد ---
+// ضع الجزء الأول من مفتاحك الطازج هنا بين علامتي التنصيص
 const KEY_PART_1 = "AIzaSyB3Q4agfYcep8R6N"; 
 
 // ضع الجزء المتبقي والأخير من مفتاحك هنا بين علامتي التنصيص
@@ -231,10 +231,10 @@ const KEY_PART_2 = "YbTfq75FYf7pc91FgY";
 const SYSTEM_INSTRUCTION = "أنت شاهين شات، نموذج ذكاء اصطناعي ومساعد ذكي عام متطور. أجب على كافة أسئلة المستخدمين بدقة وذكاء وفخامة وبأسلوب وقور وحكيم يعكس التوازن القيادي والإنساني.";
 
 async function sendMessageToGemini(userMessage) {
-    // دمج الجزئين برمجياً داخل المتصفح عند الإرسال لمنع الروبوتات من كشفه على GitHub
     const FINAL_KEY = KEY_PART_1.trim() + KEY_PART_2.trim();
     
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${FINAL_KEY}`;
+    // تم التعديل هنا إلى الصيغة المطلوبة والمثالية: gemini-1.5-flash-latest داخل v1
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${FINAL_KEY}`;
     
     const requestBody = {
         contents: [{
